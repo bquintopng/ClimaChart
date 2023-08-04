@@ -108,10 +108,10 @@ void mergeCities(std::vector<DataPoint>& data, int left, int middle, int right) 
 void mergeSortCities(std::vector<DataPoint>& data, int left, int right) {
     if (left < right) {
         int middle = (left + right) / 2;
-        mergeSortCities(movieMS, left, middle);
-        mergeSortCities(movieMS, middle+1, right);
+        mergeSortCities(data, left, middle);
+        mergeSortCities(data, middle+1, right);
 
-        mergeCities(movieMS, left, middle, right);
+        mergeCities(data, left, middle, right);
 
     }
 }
