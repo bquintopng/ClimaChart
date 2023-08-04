@@ -69,14 +69,14 @@ void mergeCities(std::vector<DataPoint>& data, int left, int middle, int right) 
 
     int leftArray = middle - left + 1;
     int rightArray = right - middle;
-    std::vector<DataPoint> X;
-    std::vector<DataPoint> Y;
+    std::vector<DataPoint> L;
+    std::vector<DataPoint> R;
 
     for(int i = 0; i < leftArray; i++) {
-        X.push_back(data[left+i]);
+        L.push_back(data[left+i]);
     }
     for(int j = 0; j < rightArray; j++) {
-        Y.push_back(data[middle+1+j]);
+        R.push_back(data[middle+1+j]);
     }
     int leftP, rightP, mergedP;
     leftP = 0;
@@ -84,24 +84,18 @@ void mergeCities(std::vector<DataPoint>& data, int left, int middle, int right) 
     mergedP = left;
 
     while(leftP < leftArray && rightP < rightArray) {
-        if(X[leftP]->avgTemp <= Y[rightP]->avgTemp) {
-            data[mergedP] = X[leftP];
-            leftP++;
+        if(L[leftP]->avgTemp <= R[rightP]->avgTemp) {
+            data[mergedP++] = L[leftP++];
         } else {
-            data[mergedP] = Y[rightP];
-            rightP++;
+            data[mergedP++] = R[rightP++];
         }
-        mergedP++;
     }
     while(leftP < leftArray) {
-        data[mergedP] = X[leftP];
-        leftP++;
-        mergedP++;
+        data[mergedP++] = L[leftP++];
     }
     while(rightP < rightArray) {
-        data[mergedP] = Y[rightP];
-        rightP++;
-        mergedP++;
+        data[mergedP++] = R[rightP++];
+
     }
 }
 
