@@ -65,6 +65,56 @@ void readFile(std::string filename, std::vector<DataPoint>& data){
         data.push_back(dp);
     }
 }
+void mergeCities(std::vector<DataPoint>& data, int left, int middle, int right) {
+
+    int leftArray = middle - left + 1;
+    int rightArray = right - middle;
+    std::vector<DataPoint> X;
+    std::vector<DataPoint> Y;
+
+    for(int i = 0; i < leftArray; i++) {
+        X.push_back(data[left+i]);
+    }
+    for(int j = 0; j < rightArray; j++) {
+        Y.push_back(data[middle+1+j]);
+    }
+    int leftP, rightP, mergedP;
+    leftP = 0;
+    rightP = 0;
+    mergedP = left;
+
+    while(leftP < leftArray && rightP < rightArray) {
+        if(X[leftP]->avgTemp <= Y[rightP]->avgTemp) {
+            data[mergedP] = X[leftP];
+            leftP++;
+        } else {
+            data[mergedP] = Y[rightP];
+            rightP++;
+        }
+        mergedP++;
+    }
+    while(leftP < leftArray) {
+        data[mergedP] = X[leftP];
+        leftP++;
+        mergedP++;
+    }
+    while(rightP < rightArray) {
+        data[mergedP] = Y[rightP];
+        rightP++;
+        mergedP++;
+    }
+}
+
+void mergeSortCities(std::vector<DataPoint>& data, int left, int right) {
+    if (left < right) {
+        int middle = (left + right) / 2;
+        mergeSortCities(movieMS, left, middle);
+        mergeSortCities(movieMS, middle+1, right);
+
+        mergeCities(movieMS, left, middle, right);
+
+    }
+}
 
 int main(){
     using namespace matplot;
@@ -72,8 +122,14 @@ int main(){
     std::vector<double> lat;
     std::vector<double> lon;
     std::vector<DataPoint> data;
+    std::vector<DataPoint> mergeSorted;
     //readFile("archive/GlobalLandTemperaturesByMajorCity.csv", data);
     readFile("archive/GlobalLandTemperaturesByCity.csv", data);
+    readFile("archive/GlobalLandTemperaturesByCity.csv", mergeSorted);
+    mergeSortCities(mergeSorted,0,mergeSorted.size()-1);
+    for(int i = 0; i < 100; i++) {
+        cout << mergeSorted[i]->coordinate << " " << mergeSorted[i]->avgTemp<< endl;
+    }
 
     for(auto& dp : data){
         lat.push_back(dp.coordinate.first);
