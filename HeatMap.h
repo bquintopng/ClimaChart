@@ -9,12 +9,24 @@
 #include <random>
 
 using namespace matplot;
-using namespace std;
 
-class HeatMap {
-    vector<double> lat_;
-    vector<double> lon_;
+
+struct HeatMap {
+    std::vector<double> latitude;
+    std::vector<double> longitude;
+    std::vector<double> weight;
+
+    HeatMap(std::vector<double> lat, std::vector<double> lon, std::vector<double> w){
+        latitude = lat;
+        longitude = lon;
+        weight = w;
+        geodensityplot(latitude, longitude, weight);
+        color_array blue_water = {0.f, 0.4f, 0.61f, 0.76f};
+        gca()->color(blue_water);
+        show();
+    }
 };
+
 
 
 #endif //CLIMACHART_HEATMAP_H
