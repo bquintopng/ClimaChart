@@ -8,27 +8,36 @@
 #include "DataPoint.h"
 
 double convertCoord(std::string c){
-    double coord = stod(c);
-    char cardinal = c.back();
-    if(cardinal == 'W' || cardinal == 'S')
-        return -coord;
-    else return coord;
+
+    if(!c.empty()){
+        double coord = stod(c);
+        char cardinal = c.back();
+
+        if(cardinal == 'S' || cardinal == 'W')
+            coord = -coord;
+
+        return coord;
+    }else return 0.0;
 }
 
 void readFile(std::string filename, std::vector<DataPoint>& data){
     std::ifstream inputFile(filename);
 
-    // Line Format: Date, Avg Temp, Uncertainty, City, Country, lat, long
+    // Line Format:
+    // Date, Avg Temp, Uncertainty, City, Country, latitude(NS), longitude(EW)
     std::string line = "";
     getline(inputFile, line);
     while(getline(inputFile, line)){
-        std::string date = "";
+        std::string date;
         double temperature = 0.0;
         double uncertainty = 0.0;
-        double lat = 0.0;
-        double lon = 0.0;
+        std::string country;
+        std::string city;
+        double lat;
+        double lon;
         std::string tempString;
         std::stringstream ss(line);
+
 
         // Date
         getline(ss, date, ',');
@@ -43,13 +52,13 @@ void readFile(std::string filename, std::vector<DataPoint>& data){
         getline(ss, tempString, ',');
         getline(ss, tempString, ',');
 
-        // Latitude
+        // Latitude & Longitude
         getline(ss, tempString, ',');
-        if(!tempString.empty()) lat = convertCoord(tempString);
-        // Longitude
-        getline(ss, tempString, ',');
-        if(!tempString.empty()) lon = convertCoord(tempString);
+        lat = convertCoord(tempString);
+        getline(ss, tempString, '\r');
+        lon = convertCoord(tempString);
         std::pair<double, double> coordinate = {lat, lon}; // latitude always precedes longitude
+
 
         DataPoint dp(coordinate, date, temperature, uncertainty);
 
@@ -58,28 +67,22 @@ void readFile(std::string filename, std::vector<DataPoint>& data){
 }
 
 int main(){
-    /*std::vector<DataPoint> data;
+    using namespace matplot;
 
+    std::vector<double> lat;
+    std::vector<double> lon;
+    std::vector<DataPoint> data;
+    //readFile("archive/GlobalLandTemperaturesByMajorCity.csv", data);
     readFile("archive/GlobalLandTemperaturesByCity.csv", data);
 
     for(auto& dp : data){
-        dp.Display();
+        lat.push_back(dp.coordinate.first);
+        lon.push_back(dp.coordinate.second);
     }
-    std::cout<<data.size();
-
-    return 0;*/
-
-    using namespace matplot;
-
-    std::vector<double> lon =
-            transform(matplot::linspace(-170, 170, 3000),
-                      [](double x) { return x + 10. * rand(0, 1); });
-    std::vector<double> lat = transform(
-            lon, [](double x) { return 50. * cosd(3 * x) + 10 * rand(0, 1); });
-    std::vector<double> weights =
-            transform(lon, [](double lon) { return 101. + 100 * (sind(2 * lon)); });
-
+    //std::vector<double> lon = iota(-170, 1, 170);
+    //std::vector<double> lat = transform(lon, [](double x) { return x*rand(-0.5,0.5); });
     geodensityplot(lat, lon);
+    //->marker_style(line_spec::marker_style::circle);
 
     show();
     return 0;

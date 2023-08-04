@@ -3,13 +3,12 @@
 //
 #include <iostream>
 
-class DataPoint{
+struct DataPoint{
     std::pair<double, double> coordinate;
     std::string date; // format: year-month-day
     double avgTemp;
     double avgUncertainty;
 
-public:
     DataPoint(std::pair<double, double> coords, std::string date, double temp, double uncertainty){
         this->coordinate = coords;
         this->date = date;
