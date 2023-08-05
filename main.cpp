@@ -168,6 +168,28 @@ void quickSort(std::vector<DataPoint> &data, int low, int high)
     }
 }
 
+int partitionByCoordinates(std::vector<DataPoint>& data, int low, int high) {
+    double pivot = data[high].coordinate.first; // Sort by latitude
+    int i = low - 1;
+
+    for (int j = low; j < high; j++) {
+        if (data[j].coordinate.first <= pivot) {
+            i++;
+            std::swap(data[i], data[j]);
+        }
+    }
+    std::swap(data[i + 1], data[high]);
+    return i + 1;
+}
+
+void quickSortByCoordinates(std::vector<DataPoint>& data, int low, int high) {
+    if (low < high) {
+        int pi = partitionByCoordinates(data, low, high);
+        quickSortByCoordinates(data, low, pi - 1);
+        quickSortByCoordinates(data, pi + 1, high);
+    }
+}
+
 int main(){
     using namespace matplot;
 
@@ -212,6 +234,7 @@ int main(){
 
     HeatMap(lat, lon, weight);
     quickSort(data, 0, data.size() - 1);
+    quickSortByCoordinates(data, 0, data.size() - 1);
 
     return 0;
 }
