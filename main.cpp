@@ -168,12 +168,12 @@ void quickSort(std::vector<DataPoint> &data, int low, int high)
     }
 }
 
-int partitionByCoordinates(std::vector<DataPoint>& data, int low, int high) {
-    double pivot = data[high].coordinate.first; // Sort by latitude
+int partitionByTime(std::vector<DataPoint>& data, int low, int high) {
+    std::string pivot = data[high].date; // Sort by date
     int i = low - 1;
 
     for (int j = low; j < high; j++) {
-        if (data[j].coordinate.first <= pivot) {
+        if (data[j].date <= pivot) {
             i++;
             std::swap(data[i], data[j]);
         }
@@ -182,11 +182,11 @@ int partitionByCoordinates(std::vector<DataPoint>& data, int low, int high) {
     return i + 1;
 }
 
-void quickSortByCoordinates(std::vector<DataPoint>& data, int low, int high) {
+void quickSortByTime(std::vector<DataPoint>& data, int low, int high) {
     if (low < high) {
-        int pi = partitionByCoordinates(data, low, high);
-        quickSortByCoordinates(data, low, pi - 1);
-        quickSortByCoordinates(data, pi + 1, high);
+        int pi = partitionByTime(data, low, high);
+        quickSortByTime(data, low, pi - 1);
+        quickSortByTime(data, pi + 1, high);
     }
 }
 
@@ -234,7 +234,7 @@ int main(){
 
     HeatMap(lat, lon, weight);
     quickSort(data, 0, data.size() - 1);
-    quickSortByCoordinates(data, 0, data.size() - 1);
+    quickSortByTime(data, 0, data.size() - 1);
 
     return 0;
 }
