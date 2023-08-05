@@ -8,55 +8,40 @@
 
 class ClimaChart {
 private:
+
     std::vector<DataPoint> data;
+    std::vector<std::pair<std::pair<double, double>, double>> tempRateOfChange;
+
+    /// Merge Sort
+    void merge(std::vector<DataPoint>& data, int left, int middle, int right);
+    void mergeYear(std::vector<DataPoint>& data, int left, int middle, int right);
+
+    void mergeSortCities(std::vector<DataPoint>& data, int left, int right);
+    void mergeSortYear(std::vector<DataPoint>& data, int left, int right);
+
+    /// Quick Sort
+    int partition(std::vector<DataPoint>& data, int low, int high);
+    int partitionByTime(std::vector<DataPoint>& data, int low, int high);
+
+    void quickSort(std::vector<DataPoint> &data, int low, int high);
+    void quickSortByTime(std::vector<DataPoint>& data, int low, int high);
+
+    double convertCoord(std::string c);
+
+public:
     std::vector<double> latitude;
     std::vector<double> longitude;
     std::vector<double> weight;
-    std::vector<std::pair<std::pair<double, double>, double>> tempRateOfChange;
 
-    std::vector<std::pair<std::pair<double,double>, double>> calculateTempChange();
+    void calculateTempChange(int sortchoice);
+    void calculateLinearRegression(int sortchoice);
+    void readFile(std::string filename);
 
-    void merge(std::vector<DataPoint>& data, int left, int middle, int right);
-    double convertCoord(std::string c);
-
-    int partition(std::vector<DataPoint>& data, int low, int high);
-
-public:
-
-    ClimaChart(){
-        readFile();
-
-        tempRateOfChange = calculateTempChange();
-        for(auto& dp : tempRateOfChange){
-            latitude.push_back(dp.first.first);
-            longitude.push_back(dp.first.second);
-            weight.push_back(dp.second);
-        }
-
-        HeatMap hm(latitude, longitude, weight);
-        hm.Display();
+    void reset() {
+        data.clear();
+        latitude.clear();
+        longitude.clear();
+        weight.clear();
     }
-
-    void mergeSortCities(std::vector<DataPoint>& data, int left, int right) {
-        if (left < right) {
-            int middle = (left + right) / 2;
-            mergeSortCities(data, left, middle);
-            mergeSortCities(data, middle+1, right);
-
-            merge(data, left, middle, right);
-
-        }
-    }
-    void quickSort(std::vector<DataPoint> &data, int low, int high)
-    {
-        if (low < high)
-        {
-            int pi = partition(data, low, high);
-            quickSort(data, low, pi - 1);
-            quickSort(data, pi + 1, high);
-        }
-    }
-
-    bool readFile();
 };
 

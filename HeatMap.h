@@ -26,8 +26,13 @@ struct HeatMap {
         geodensityplot(latitude, longitude, weight);
         color_array blue_water = {0.f, 0.4f, 0.61f, 0.76f};
         gca()->color(blue_water);
+        color_array terrain = {0.f, 0.71f, 0.65f, 0.59f};
+        geoplot()->color(terrain);
+        gca()->colormap(palette::hot());
+        show();
         show();
     }
+
 };
 
 
