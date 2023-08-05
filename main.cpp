@@ -143,6 +143,53 @@ void mergeSortCities(std::vector<DataPoint>& data, int left, int right) {
 
     }
 }
+void mergeYear(std::vector<DataPoint>& data, int left, int middle, int right) {
+
+    int leftArray = middle - left + 1;
+    int rightArray = right - middle;
+    std::vector<DataPoint> L;
+    std::vector<DataPoint> R;
+
+    for(int i = 0; i < leftArray; i++) {
+        L.push_back(data[left+i]);
+    }
+    for(int j = 0; j < rightArray; j++) {
+        R.push_back(data[middle+1+j]);
+    }
+    int leftP, rightP, mergedP;
+    leftP = 0;
+    rightP = 0;
+    mergedP = left;
+
+    while(leftP < leftArray && rightP < rightArray) {
+        if(L[leftP].date <= R[rightP].date) {
+            data[mergedP] = L[leftP];
+            leftP++;
+        } else {
+            data[mergedP] = R[rightP];
+            rightP++;
+        }
+        mergedP++;
+    }
+    while(leftP < leftArray) {
+        data[mergedP++] = L[leftP++];
+
+    }
+    while(rightP < rightArray) {
+        data[mergedP++] = R[rightP++];
+    }
+}
+
+void mergeSortYear(std::vector<DataPoint>& data, int left, int right) {
+    if (left < right) {
+        int middle = (left + right) / 2;
+        mergeSortYear(data, left, middle);
+        mergeSortYear(data, middle+1, right);
+
+        mergeYear(data, left, middle, right);
+
+    }
+}
 
 int partition(std::vector<DataPoint>& data, int low, int high) {
     double pivot = data[high].avgTemp;
