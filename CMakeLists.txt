@@ -14,5 +14,5 @@ if(NOT matplotplusplus_POPULATED)
     add_subdirectory(${matplotplusplus_SOURCE_DIR} ${matplotplusplus_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
-add_executable(ClimaChart main.cpp DataPoint.h)
+add_executable(ClimaChart main.cpp DataPoint.h ClimaChart.h ClimaChart.cpp HeatMap.h)
 target_link_libraries(ClimaChart PUBLIC matplot)

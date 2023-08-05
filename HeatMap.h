@@ -20,6 +20,9 @@ struct HeatMap {
         latitude = lat;
         longitude = lon;
         weight = w;
+    }
+
+    void Display(){
         geodensityplot(latitude, longitude, weight);
         color_array blue_water = {0.f, 0.4f, 0.61f, 0.76f};
         gca()->color(blue_water);
